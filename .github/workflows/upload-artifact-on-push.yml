@@ -33,7 +33,7 @@ jobs:
         run: |
           pluginHeaderVersion=`grep "Version:" bluehost-wordpress-plugin.php | grep -Eo "[0-9\.]*"`
           pluginConstantVersion=`grep "'BLUEHOST_PLUGIN_VERSION'" bluehost-wordpress-plugin.php | grep -Eo "[0-9\.]*"`
-          pluginPackageVersion=`grep "version" package.json | grep -Eo "[0-9\.]*"`
+          pluginPackageVersion=`grep '"version"' package.json | grep -Eo "[0-9\.]*"`
           echo "Plugin header version: $pluginHeaderVersion"
           echo "Plugin constant version: $pluginConstantVersion"
           echo "Plugin package version: $pluginPackageVersion"
@@ -83,10 +83,14 @@ jobs:
           npm --version
 
       - name: Validate composer.json and composer.lock
+        if: ${{ github.repository == 'bluehost/bluehost-wordpress-plugin' }}
         run: composer validate
 
       - name: Install PHP Dependencies
         run: composer install --no-progress --no-dev --optimize-autoloader --prefer-dist
+
+      - name: Setup Registry
+        run: printf "\n//npm.pkg.github.com/:_authToken=${{ secrets.NEWFOLD_ACCESS_TOKEN }}" >> .npmrc
 
       - name: NPM Install
         run: npm install --legacy-peer-deps

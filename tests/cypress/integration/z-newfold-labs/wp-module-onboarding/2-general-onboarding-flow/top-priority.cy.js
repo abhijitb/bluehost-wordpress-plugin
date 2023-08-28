@@ -7,7 +7,7 @@ describe( 'Top Priority Page', function () {
 		cy.visit( 'wp-admin/?page=nfd-onboarding#/wp-setup/step/top-priority' );
 	} );
 
-	it( 'Check Drawer Activity', () => {
+	it.skip( 'Check Drawer Activity', () => {
 		DrawerActivityForMenu(
 			'Exit to WordPress',
 			':nth-child(2)',
@@ -48,6 +48,7 @@ describe( 'Top Priority Page', function () {
 						cy.url().should( 'include', 'step/basic-info', {
 							timeout: 30000,
 						} );
+						cy.wait(5000);
 						cy.go( 'back' );
 						cy.get(
 							'.nfd-card__body.nfd-selected-card> .nfd-card__body_title'

@@ -7,6 +7,7 @@ import {
 	BuildingStorefrontIcon,
 	QuestionMarkCircleIcon } 
 from '@heroicons/react/24/outline';
+import { NewfoldRuntime } from '@newfold-labs/wp-module-runtime';
 import { Route, Routes } from 'react-router-dom';
 import { __ } from '@wordpress/i18n';
 import Home from '../pages/home';
@@ -17,6 +18,7 @@ import Settings from '../pages/settings';
 import Staging from '../pages/staging';
 import Example from '../pages/example';
 import Help from '../pages/help';
+import { ReactComponent as HelpIcon } from "../components/icons/HelpIcon.svg";
 
 const addPartialMatch = (prefix, path) =>
   prefix === path ? `${prefix}/*` : path;
@@ -82,10 +84,16 @@ export const routes = [
 				name: '/store/products',
 				title: __( 'Products & Services', 'wp-plugin-bluehost' ),
 			},
-			window.WPPBH.capabilities.hasYithExtended
+			NewfoldRuntime.hasCapability( 'hasYithExtended' )
 			? {
 				name: "/store/sales_discounts",
 				title: __("Sales & Discounts", "wp-plugin-bluehost"),
+			}
+			: null,
+			NewfoldRuntime.hasCapability( 'isEcommerce' )
+			? {
+				name: '/store/payments',
+				title: __( 'Payments', 'wp-plugin-bluehost' ),
 			}
 			: null,
 			{
@@ -149,8 +157,8 @@ export const routes = [
 		name: '/help',
 		title: __( 'Help', 'wp-plugin-bluehost' ),
 		Component: Help,
-		Icon: QuestionMarkCircleIcon,
-		action: window.WPPBH.capabilities.canAccessHelpCenter ? HelpCenterAI : false,
+		Icon: HelpIcon,
+		action: NewfoldRuntime.hasCapability( 'canAccessHelpCenter' ) ? HelpCenterAI : false,
 	},
 ];
 
